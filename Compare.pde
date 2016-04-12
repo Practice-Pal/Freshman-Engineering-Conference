@@ -10,11 +10,11 @@ public static class Compare
   }
   
   //true if the user plays the correct note
-  static boolean check(String correct, String input)
+  static boolean check(String correct, String input, boolean open)
   {
     input = input.toLowerCase();
     
-    if(input.charAt(0) == correct.charAt(0))
+    if(input.charAt(0) == correct.charAt(0) || (input.charAt(0) == ' ' && open))
       return true;
     else
       return false;

@@ -14,7 +14,8 @@ class Note
   
   private boolean correct; //true if user plays correct note
   private boolean done; //true if user pressed a key
- 
+  private boolean checked; //true if PlayMode has already checked score for this note
+  
   color noteColor = color(0);
   color right = color(28, 255, 0);
   color wrong = color(255, 0, 0);
@@ -148,7 +149,9 @@ class Note
     }
     
   }
-      
+  
+  
+  //checks if note is correct
   void checkNote(boolean pressed, boolean right, boolean in, boolean past)
   {
     if(in && !done){
@@ -169,13 +172,42 @@ class Note
     
   }
   
-  
+  boolean openString()
+  {
+    if(pitchNum == 2 || pitchNum == 6 || pitchNum == -2 || pitchNum == 6)  
+      return true;
+    else
+      return false;
+  }
   //returns string pitch
   String getPitch()
   {
     return pitch; 
   }
   
+  //sets the note to be checked if PlayMode has calculatd score for this note
+  void setChecked()
+  {
+     checked = true; 
+  }
+  //returns boolean done
+  boolean getDone()
+  {
+    return done; 
+  }
+  
+  
+  //returns boolean checked
+  boolean getChecked()
+  {
+    return checked; 
+  }
+  
+  //returns boolean correct
+  boolean getCorrect()
+  {
+    return correct; 
+  }
     /*
   //returns int noteValue
   int getNoteValue()

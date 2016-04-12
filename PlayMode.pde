@@ -19,6 +19,8 @@ public class PlayMode
   String input;
   
   int score;
+  int combo;
+  final int great = 300;
   
   Song song; //song loaded
   Note[] songInfo; //note information for song
@@ -38,7 +40,10 @@ public class PlayMode
     alto_clef= loadImage("alto clef.jpg");
     alto_clef.resize(90,130);
     time_signature = loadImage("4-4-basic-time-signature.jpg");
-   
+    
+    textFont(optionTextFont);
+    textSize(150);
+    
     //loads song from textfile
     song = new Song(filename);
     song.createSong();
@@ -46,7 +51,7 @@ public class PlayMode
     
     //determines initial positions of all notes
     position = new PVector[songInfo.length];
-    velocity = new PVector(-3, 0);
+    velocity = new PVector(-4, 0);
     
     correct = new boolean[songInfo.length];
     in = new boolean[songInfo.length];
@@ -74,6 +79,7 @@ public class PlayMode
     }
     
     score = 0;
+    combo = 0;
     
     /*
     textFont(optionHeadFont);
@@ -84,11 +90,18 @@ public class PlayMode
     
   }
   
+  
+  
   public void draw()
   {
     strokeWeight(1);
     background(255);
     rectMode(CENTER);
+    
+    textAlign(RIGHT);
+    text(nf(score, 8), screenSizeX, 50);
+    textAlign(LEFT);
+    text(combo + "x", 0, screenSizeY);
     
     if ( myPort.available() > 0) 
     {  // If data is available,
@@ -118,8 +131,21 @@ public class PlayMode
         
         if(input != null){
           notEmpty = Compare.notEmpty(input);
-          right = Compare.check(songInfo[i].getPitch(), input);
+          right = Compare.check(songInfo[i].getPitch(), input, songInfo[i].openString());
           songInfo[i].checkNote(notEmpty, right, in[i], past[i]);
+          
+          if(!songInfo[i].getChecked() && songInfo[i].getDone()){
+            if(songInfo[i].getCorrect()){
+              combo++;
+              score += combo*great;
+            }
+            else{
+              combo = 0;
+            }
+            songInfo[i].setChecked();
+          }
+          
+            
         }
         songInfo[i].drawNote(position[i].x, position[i].y);
         

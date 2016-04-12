@@ -8,23 +8,20 @@ public class Song
   Song (String filename)
   {
     unparsed = loadStrings(filename); //loads data file
-    song = new Note[unparsed.length]; 
+    song = new Note[unparsed.length];  //creates song with data file
     
-    for(int i = 0; i < unparsed.length; i++){
+    for(int i = 0; i < unparsed.length; i++){ 
       song[i] = new Note(split(unparsed[i], '\t')); //transfers information from unparsed string array into note object
     }
     
-    //drawData = new int[unparsed.length][2];
   }
   
+  //stores pitch and duration data into each note
   void createSong()
   {
     for(int i = 0; i < song.length; i++){
       song[i].determinePitch();
       song[i].determineLength();
-      
-      //drawData[i][0] = song[i].getPitchNum();
-      //drawData[i][1] = song[i].getLength();
     }
   }
   
@@ -33,10 +30,5 @@ public class Song
     return song;
     
   }
-  /*
-  int[][] getSong()
-  {
-    return drawData;
-  }
-  */
+
 }

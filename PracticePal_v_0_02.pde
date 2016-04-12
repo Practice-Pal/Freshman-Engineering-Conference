@@ -10,7 +10,6 @@ color lines; //color of music lines
 color colorOptionHead, colorOptionText; //color of option head and text
 
 Select_Music_Screen music_select;
-//Moving_Sheet_Music notesscrolling;
 PlayMode playmode;
 MainMenu mainMenu;
 
@@ -38,7 +37,7 @@ void setup()
   colorBackButton = color(251);
   
   music_select = new Select_Music_Screen();
-  //notesscrolling = new Moving_Sheet_Music();
+
   playmode = new PlayMode();
   mainMenu = new MainMenu();
   
@@ -72,7 +71,7 @@ void draw()
   }
   else if(stage == 6)
   {
-    playmode.setup(music_select.mouseClicked());
+    playmode.setup(music_select.returnSong());
     stage = 7;
   }
   else if (stage == 7)
@@ -98,12 +97,12 @@ void mouseClicked()
       stage = 5;
   }
   
-  if (stage == 5){
-    if(overSong1())
-      stage = 6 ;
+  else if (stage == 5){
+    if(music_select.overSong())
+      music_select.returnSong();
   }
   
-  if(stage != 1){
+  else if(stage != 1){
     if (overBack(screenSizeX-25, screenSizeY-25, 100))
       stage = 1;
   }
@@ -204,16 +203,6 @@ boolean overBack(int backCenterX, int backCenterY, int radius)
 {
   double dist = sqrt(pow(mouseX-backCenterX,2) + pow(mouseY-backCenterY,2));
   if(dist < radius)
-    return true;
-  else
-    return false;
-}
-
-//true if the mouse is over the Song 1 button
-boolean overSong1()
-{
- 
-  if(mouseX<=width-100 && mouseX>=100 && mouseY<=height/2 && mouseY>=height/4)
     return true;
   else
     return false;
