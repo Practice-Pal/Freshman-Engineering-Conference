@@ -2,8 +2,12 @@ import processing.serial.*;
 Serial myPort;  // Create object from Serial class
 
 PImage musicNote; //image of music note
-PFont titleFont, optionFont, optionHeadFont, optionTextFont; //font of title, font of options, font of header of options, font of text of options
+PImage logo; //image of logo
+PImage A, B, C, D; //image of grades
+PFont titleFont, optionFont, optionHeadFont, optionTextFont, scoreFont; //font of title, font of options, font of header of options, font of text of options
 int screenSizeX, screenSizeY, stage; //length of screen, height of screen, stage number
+int ratioX, ratioY; //ints for resizing objects
+int backCenterX, backCenterY; //coordinates of center of back button
 color colorOptionTextFalse, colorOptionTextTrue; //color of options if not moused over, color of options if moused over
 color colorBackButton; //color of back button
 color lines; //color of music lines
@@ -12,6 +16,7 @@ color colorOptionHead, colorOptionText; //color of option head and text
 Select_Music_Screen music_select;
 PlayMode playmode;
 MainMenu mainMenu;
+HighScores highScores;
 
 void setup()
 {
@@ -19,6 +24,9 @@ void setup()
   //sets size of screen
   screenSizeX = 1600; 
   screenSizeY = 900;
+  ratioX = screenSizeX/1600;
+  ratioY = screenSizeY/900;
+  
   surface.setSize(screenSizeX, screenSizeY); 
   
   background(255); //sets color of background
@@ -27,7 +35,10 @@ void setup()
   optionFont = loadFont("SegoeUI-Light-40.vlw"); 
   optionHeadFont = loadFont("SegoeUI-Light-60.vlw"); 
   optionTextFont = loadFont("SegoeUI-Light-30.vlw"); 
+  scoreFont = loadFont("3ds-Light-72.vlw");
+  
   musicNote = loadImage("music Note Title Screen.png");
+  logo = loadImage("Logo.jpg");
   
   colorOptionTextFalse = color(49, 44, 44);
   colorOptionTextTrue = color(201);
@@ -37,11 +48,12 @@ void setup()
   colorBackButton = color(251);
   
   music_select = new Select_Music_Screen();
-
+  
   playmode = new PlayMode();
   mainMenu = new MainMenu();
+  highScores = new HighScores();
   
-  myPort = new Serial(this, "COM8", 9600);
+ // myPort = new Serial(this, "COM8", 9600);
   
   stage = 1;
 }
@@ -49,7 +61,7 @@ void setup()
 
 void draw()
 {
-  
+
   if (stage == 1){ //goes to main menu
     mainMenu.menu();
     
@@ -72,12 +84,18 @@ void draw()
   else if(stage == 6)
   {
     playmode.setup(music_select.returnSong());
+    highScores.setDate();
     stage = 7;
   }
   else if (stage == 7)
   {
     playmode.draw();
     backButton();
+  }
+  else if (stage == 8)
+  {
+    background(255);
+    playmode.postGame();
   }
     
 }
@@ -95,11 +113,15 @@ void mouseClicked()
       stage = 4;
     else if (overPlay())
       stage = 5;
+    else if(overBack(screenSizeX-25, screenSizeY-25, 100))
+      exit();
   }
   
   else if (stage == 5){
     if(music_select.overSong())
       music_select.returnSong();
+    if (overBack(screenSizeX-25, screenSizeY-25, 100))
+      stage = 1;
   }
   
   else if(stage != 1){
@@ -114,7 +136,8 @@ void backButton()
   fill(colorBackButton);
   stroke(lines);
   strokeWeight(10);
-  int backCenterX = screenSizeX-25, backCenterY = screenSizeY-25;
+  backCenterX = 1575;
+  backCenterY = 875;
   ellipse(backCenterX, backCenterY, 200, 200);
   
   optionUpdate(backCenterX, backCenterY, 100);
@@ -123,8 +146,13 @@ void backButton()
   fill(colorOptionTextFalse);
   stroke(colorOptionTextFalse);
   textFont(optionFont);
-  text("Back", screenSizeX-50, screenSizeY-37);
-
+  
+  if(stage == 1){
+    text("Exit", screenSizeX-50, screenSizeY-37);
+  }
+  else{
+    text("Back", screenSizeX-50, screenSizeY-37);
+  }
 }
 
 

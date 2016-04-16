@@ -134,7 +134,7 @@ class Note
         stroke(noteColor);
         ellipseMode(CENTER);
         ellipse(xPos, yPos, 40, 25);
-        line(xPos+22.5, yPos, xPos+20, yPos-90);
+        line(xPos+22.5, yPos, xPos+22.5, yPos-90);
         break;
         
       case 8: //eighth note

@@ -3,12 +3,13 @@ class Select_Music_Screen
   
   PImage first;
   String[][] songInfo = {
-                   {"Twinkle, Twinkle, Little Star", "W.A. Mozart", "TwinkleTwinkle.txt"},
-                    {"Honeybee", "Bohemian Folk Song", "Honeybee.txt"},
-                    {"Lightly Row", "Traditional Folk Song", "LightlyRow.txt"},
-                    {"Go Tell Aunt Rhody", "American Folk Song", "AuntRhody.txt"},
-                    {"C Test", "Clement Ekaputra", "CTest.txt"},
-                    {"Open String Test", "Clement Ekaputra", "openTest.txt"}
+                   {"Twinkle, Twinkle, Little Star", "W.A. Mozart", "TwinkleTwinkle"},
+                    {"Honeybee", "Bohemian Folk Song", "Honeybee"},
+                    {"Lightly Row", "Traditional Folk Song", "LightlyRow"},
+                    {"Go Tell Aunt Rhody", "American Folk Song", "AuntRhody"},
+                    {"C Test", "Clement Ekaputra", "CTest"},
+                    {"Open String Test", "Clement Ekaputra", "openTest"},
+                    {"F Test", "Clement Ekaputra", "FTest"}
                  };
   int rectPos; //which song cursor is over
   
@@ -53,8 +54,7 @@ class Select_Music_Screen
        text(songInfo[i][0], 100, 275+60*i);
        text(songInfo[i][1], 1000, 275+60*i);
      }
-    //display();
-    
+
     backButton();
   }
  
@@ -70,10 +70,10 @@ class Select_Music_Screen
     }
   }
     
-  String returnSong()
+  String[] returnSong()
   {
     stage = 6;
-    return songInfo[rectPos][2];
+    return songInfo[rectPos];
     
 
   }
@@ -85,7 +85,5 @@ class Select_Music_Screen
     else
       return false;
   }
-   
   
-    
 }

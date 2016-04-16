@@ -10,7 +10,9 @@ public class MainMenu
     fill(0);
     stroke(0);
     textFont(titleFont);
-    text("PracticePal", 925, 400);
+
+    image(logo, 400, 75, 1338*0.9, 466*0.9);
+    //text("PracticePal", 925, 400);
     
     rectMode(CENTER);
       
@@ -39,7 +41,8 @@ public class MainMenu
     text("ABOUT", 550, 555);
     text("HIGH SCORES", 550, 615);
     text("OPTIONS", 550, 675);
-  
+    
+    backButton();
   }
   
   
@@ -113,6 +116,7 @@ public class MainMenu
   }
   
   
+  //options screen
   void options()
   {
     background(255);

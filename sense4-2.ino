@@ -195,19 +195,28 @@ void loop() {
   else {
     note4 = ' ';
   }
-
+  /*
+  Serial.print(note1 + "\t");
+  Serial.println(val1);
+  */
+  
   if (note1 == " " && note2 == " " && note3 == " ") {
     Serial.println(note4);
+    //Serial.println(val4);
   }
   else if (note1 == " " && note2 == " " && note4 == " " ){
-  Serial.println(note3);
+    Serial.println(note3);
+    //Serial.println(val3);
   }
   else if (note1 == " " && note3 == " " && note4 == " " ){
-  Serial.println(note2);
+    Serial.println(note2);
+    //Serial.println(val2);
   }
   else if (note2 == " " && note3 == " " && note4 == " " ){
-  Serial.println(note1);
+    Serial.println(note1);
+    //Serial.println(val1);
   }
+
 
 
 
