@@ -53,7 +53,7 @@ void setup()
   mainMenu = new MainMenu();
   highScores = new HighScores();
   
- // myPort = new Serial(this, "COM8", 9600);
+  myPort = new Serial(this, "COM8", 9600);
   
   stage = 1;
 }
@@ -130,6 +130,21 @@ void mouseClicked()
   }
 }
 
+//pause function
+void keyPressed()
+{
+  if(stage == 7){
+    if(key == ENTER)
+    {
+       playmode.setPause(true);
+    }
+    else if(key == BACKSPACE)
+    {
+      playmode.setPause(false);
+    }
+  }
+}
+  
 void backButton()
 {
   ellipseMode(CENTER);

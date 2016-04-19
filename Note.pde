@@ -16,16 +16,23 @@ class Note
   private boolean done; //true if user pressed a key
   private boolean checked; //true if PlayMode has already checked score for this note
   
+  int beatLength; //pixel length of a measure
+  int beatsPer; //beats per measure
+  int beatValue; //value of one beat
+  
   color noteColor = color(0);
   color right = color(28, 255, 0);
   color wrong = color(255, 0, 0);
   int fade = 255;
   
   //constructor
-  Note(String[] info)
+  Note(String[] info, int beatsInMeasure, int beatVal, int lengthBeat)
   {
     pitch = info[0];
     noteValue = Integer.parseInt(info[1]);
+    beatLength = lengthBeat;
+    beatValue = beatVal;
+    beatsPer = beatsInMeasure;
   }
   
   
@@ -34,39 +41,39 @@ class Note
   {
     switch((pitch.toLowerCase().charAt(0))){
       case 'c':
-        pitchNum = 1;
+        pitchNum = 0;
         break;
       case 'd':
-        pitchNum = 2;
+        pitchNum = 1;
         break;
       case 'e':
-        pitchNum = 3;
+        pitchNum = 2;
         break;
       case 'f':
-        pitchNum = 4;
+        pitchNum = 3;
         break;
       case 'g':
-        pitchNum = 5;
+        pitchNum = 4;
         break;
       case 'a':
-        pitchNum = 6;
+        pitchNum = 5;
         break;
       case 'b':
-        pitchNum = 7;
+        pitchNum = 6;
         break;
     }
     
     
     if(pitch.charAt(1) == '#'){
       sharp = true;
-      pitchNum += 8*((int)pitch.charAt(2)-48-4);
+      pitchNum += 7*((int)pitch.charAt(2)-48-4);
     }
     else if (pitch.charAt(1) == 'b'){
       flat = true;
-      pitchNum += 8*((int)pitch.charAt(2)-48-4);
+      pitchNum += 7*((int)pitch.charAt(2)-48-4);
     }
     else{
-     pitchNum += 8*((int)pitch.charAt(1)-48-4); 
+     pitchNum += 7*((int)pitch.charAt(1)-48-4); 
     }
     
   }
@@ -74,7 +81,7 @@ class Note
   //converts length of note into pixel distance
   void determineLength() 
   {
-    drawLength = 500/noteValue;
+    drawLength = beatLength * beatValue / noteValue;
   }
   
   //returns int pitchNum
@@ -112,22 +119,40 @@ class Note
    
     switch(noteValue){
       case 1: //whole note
-        stroke(noteColor);
-        strokeWeight(5);
-        fill(255);
-        ellipseMode(CENTER);
-        ellipse(xPos, yPos, 40, 25);
+        if(pitch.charAt(0) != 'r'){
+          stroke(noteColor);
+          strokeWeight(5);
+          fill(255);
+          ellipseMode(CENTER);
+          ellipse(xPos, yPos, 40, 25);
+        }
+        else{
+          stroke(noteColor);
+          strokeWeight(7);
+          fill(0);
+          line(xPos,yPos-12,xPos+150,yPos-12);
+          rect(xPos+71,yPos,70,20);
+        }
         break;
         
       case 2: //half note
-        strokeWeight(5);
-        stroke(noteColor);
-        fill(255, fade);
-        ellipseMode(CENTER);
-        ellipse(xPos, yPos, 40, 25);
-        line(xPos+22.5, yPos, xPos+20, yPos-90);
+        if(pitch.charAt(0) != 'r'){
+          strokeWeight(5);
+          stroke(noteColor);
+          fill(255);
+          ellipseMode(CENTER);
+          ellipse(xPos, yPos, 40, 25);
+          line(xPos+22.5, yPos, xPos+20, yPos-90);
+        }
+        else{
+          stroke(noteColor);
+          strokeWeight(7);
+          fill(0);
+          line(xPos,yPos-12,xPos+150,yPos-12);
+          rect(xPos+71,yPos-25,70,20);
+        }
         break;
-       
+
       case 4: //quarter note
         strokeWeight(5);
         fill(noteColor);
@@ -146,8 +171,34 @@ class Note
         line(xPos+22.5, yPos, xPos+20, yPos-90);
         curve(xPos-50, yPos-50, xPos+22.5, yPos-90, xPos+40, yPos-50, xPos, yPos);
         break;
+     
+     case 16: //sixteenth note
+        strokeWeight(5);
+        fill(noteColor);
+        stroke(noteColor);
+        ellipseMode(CENTER);
+        ellipse(xPos, yPos, 40, 25);
+        line(xPos+22.5, yPos, xPos+20, yPos-90);
+        curve(xPos-50, yPos-50, xPos+22.5, yPos-90, xPos+40, yPos-50, xPos, yPos);
+        curve(xPos-50, yPos-25, xPos+22.5, yPos-65, xPos+40, yPos-25, xPos, yPos);
+        break;
     }
     
+    fill(0, fade);
+    stroke(0, fade);
+    strokeWeight(1);
+    if(abs(pitchNum) > 5){
+      if(pitchNum > 0){
+        for(int i = 6; i <= pitchNum; i += 2){
+          rect(xPos, screenSizeY/2-15*i, 50, 2);
+        }
+      }
+      else if(pitchNum < 0){
+        for(int i = -6; i >= pitchNum; i -= 2){
+          rect(xPos, screenSizeY/2-15*i, 50, 2);
+        }
+      }
+    }
   }
   
   
@@ -174,7 +225,7 @@ class Note
   
   boolean openString()
   {
-    if(pitchNum == 2 || pitchNum == 6 || pitchNum == -2 || pitchNum == 6)  
+    if(pitchNum == 1 || pitchNum == 5 || pitchNum == -3 || pitchNum == -7)  
       return true;
     else
       return false;

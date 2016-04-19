@@ -137,4 +137,12 @@ color scoreNumColor = color(100);
       gradeImage = loadImage("D.JPG"); 
     }
   }
+  
+  void enterScores(String filename, int score, int maxCombo, float accuracy)
+  {
+    File highScoresFile = new File(filename + "Highscores.tsf");
+    if(highScoresFile.exists()){
+      
+    }
+  }
 }

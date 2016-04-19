@@ -3,12 +3,14 @@ public class PlayMode
 
   PVector[] position; //array contains positions of all notes
   PVector velocity; //moves notes left across the screen
+  float xSpeed;
   
   PImage alto_clef, time_signature; //images loaded
     
   int totalLength; //total pixel length of song, used to determine where to put notes
   int numBars; //number of measures/bar lines needed
   int[] barPosition; //stores x-coordinates of bar lines
+  int[] timeSignature; //stores two values in time signature
   
   boolean[] correct; //array storing each note and if user played correct
   boolean[] in; //true if note is in the checking area
@@ -25,8 +27,10 @@ public class PlayMode
   int numNotes; //total number of notes played at a given moment
   float accuracy; //% accuracy
   
-  int fade;
-  int refade;
+  int fade; //after game, fades into white
+  int refade; //after game, fades back into score screen
+  
+  boolean pause; //if true, game will pause
   
   final int great = 300; //adds 300*combo if user plays correct
   
@@ -44,43 +48,46 @@ public class PlayMode
     //white background
     background(255);
     
-    //loads images
-    alto_clef= loadImage("alto clef.jpg");
-    alto_clef.resize(90,130);
-    time_signature = loadImage("4-4-basic-time-signature.jpg");
-    
     //loads song from textfile
     song = new Song(info[2] + ".txt");
     song.createSong();
     songInfo = song.getSong();
     
+    //loads images
+    alto_clef= loadImage("alto clef.jpg");
+    alto_clef.resize(90,130);
+    timeSignature = song.getTimeSignature();
+    time_signature = loadImage(timeSignature[0]+"-"+timeSignature[1]+"-time-signature.jpg");
+    time_signature.resize(45, 125);
+    
     //determines initial positions of all notes
     position = new PVector[songInfo.length];
-    velocity = new PVector(-4, 0);
+    xSpeed = 120*song.getMeasureLength()/(timeSignature[0])/(60*60);
+    velocity = new PVector(-xSpeed, 0);
     
     correct = new boolean[songInfo.length];
     in = new boolean[songInfo.length];
     past = new boolean[songInfo.length];
     
     //1600 pixels before first note
-    totalLength = 1600;
+    totalLength = song.getMeasureLength()+100;
     
     //position vector of first note
-    position[0] = new PVector(1600, screenSizeY/2 - 15*(songInfo[0].getPitchNum() - 1));
+    position[0] = new PVector(totalLength, screenSizeY/2 - 15*(songInfo[0].getPitchNum()));
     
     //determines initial position vectors of all notes
     for(int i = 1; i < songInfo.length; i++){
       totalLength += songInfo[i-1].getLength();
-      position[i] = new PVector(totalLength, screenSizeY/2 - 15*(songInfo[i].getPitchNum() - 1));
+      position[i] = new PVector(totalLength, screenSizeY/2 - 15*(songInfo[i].getPitchNum()));
     }
     
     //determines number of bar lines needed
-    numBars = floor(totalLength/500);
+    numBars = floor(totalLength/song.getMeasureLength());
     barPosition = new int[numBars+4];
     
     //determines initial positions of all bar lines
     for(int i = 0; i < barPosition.length; i++){
-      barPosition[i] = 50+500*i;
+      barPosition[i] = 50+song.getMeasureLength()*i;
     }
     
     score = 0;
@@ -104,17 +111,28 @@ public class PlayMode
   
   public void draw()
   {
+    System.out.println(millis());
     strokeWeight(1);
     background(255);
     rectMode(CENTER);
     
     textFont(optionHeadFont);
     textAlign(RIGHT);
-    text(nf(score, 8), screenSizeX, 50);
-    text(nf(accuracy, 2, 2) + "%", screenSizeX, 120);
+    text(nf(score, 8), screenSizeX-10, 60);
+    text(nf(accuracy, 2, 2) + "%", screenSizeX-10, 130);
     textAlign(LEFT);
-    text(combo + "x", 0, screenSizeY);
-       
+    text(combo + "x", 10, screenSizeY-10);
+    
+    if(pause){
+      fill(0);
+      velocity.x = 0;
+      text("Press the BACKSPACE key to continue playing", screenSizeX/2,screenSizeY/4);
+    }
+    else{
+      velocity.x = -xSpeed;
+      text("Press ENTER to pause",screenSizeX/3,screenSizeY*7/8);
+    }
+    
     if ( myPort.available() > 0) 
     {  // If data is available,
        input = myPort.readStringUntil('\n');         // read it and store it in val
@@ -210,6 +228,11 @@ public class PlayMode
       }
     }
 
+  }
+ 
+  void setPause(boolean stop)
+  {
+    pause = stop; 
   }
   
   //goes to end game screen

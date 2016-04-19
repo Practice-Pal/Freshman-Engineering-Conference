@@ -7,9 +7,12 @@ class Select_Music_Screen
                     {"Honeybee", "Bohemian Folk Song", "Honeybee"},
                     {"Lightly Row", "Traditional Folk Song", "LightlyRow"},
                     {"Go Tell Aunt Rhody", "American Folk Song", "AuntRhody"},
+                    {"Minuet in G Major", "J.S. Bach", "MinuetInG"},
+                    {"Prelude, Cello Suite No.3 in C major, BWV 1009", "J.S. Bach", "BachCelloSuite3"},
                     {"C Test", "Clement Ekaputra", "CTest"},
                     {"Open String Test", "Clement Ekaputra", "openTest"},
-                    {"F Test", "Clement Ekaputra", "FTest"}
+                    {"F Test", "Clement Ekaputra", "FTest"},
+                    {"Sixteenth Note Test", "Emma Chen", "16test"}
                  };
   int rectPos; //which song cursor is over
   
